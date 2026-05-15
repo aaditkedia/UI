@@ -22,11 +22,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install
-        run: npm ci
+        # lock was generated on Windows; npm doesn't record Linux-only
+        # optional deps there, so `npm ci` fails on the Linux runner.
+        # `npm install --no-audit` resolves them at install time.
+        run: npm install --no-audit --no-fund
 
       - name: Build
         run: npm run build
